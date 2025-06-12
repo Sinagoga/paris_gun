@@ -1,11 +1,44 @@
 #include <iostream>
 #include "utils.hpp"
 #include "coords.hpp"
+#include "isa_temperature.hpp" 
+#include "isa_pressure.hpp" 
 #define _USE_MATH_DEFINES
 #include <cmath>
 
 using namespace ballistics;
 int main() {
+
+    using ballistics::ISATemperature;
+    using ballistics::ISAPressure;  
+    
+    const double test_heights[] = {0.0, 5000.0, 11000.0, 15000.0, 20000.0};
+    const double etalon[]      = {288.15, 255.65, 216.65, 216.65, 216.65};
+
+    std::cout << "ISA temperature checks:\n";
+    for (int i = 0; i < 5; ++i) {
+        double h = test_heights[i];
+        double T = ISATemperature::at(h);
+        std::cout << "  h=" << h/1000 << " km: "
+                  << T << " K (expected " << etalon[i] << ")"
+                  << (std::fabs(T - etalon[i]) < 1e-6 ? " +" : " -")
+                  << "\n";
+    }
+
+    const double test_heights_P[] = {0.0, 5000.0, 11000.0, 15000.0, 20000.0};
+    const double etalon_P[]      = {101325.0, 54019.0, 22632.0, 12041.0, 5474.0};
+
+    std::cout << "ISA pressure checks:\n";
+    for (int i = 0; i < 5; ++i) {
+        double h = test_heights_P[i];
+        double p = ISAPressure::at(h);
+        std::cout << "  h=" << h/1000 << " km: "
+                << p << " Pa (expected ~" << etalon_P[i] << ")"
+                << (std::fabs(p - etalon_P[i]) / etalon_P[i] < 0.01 ? " +" : " -")
+                << "\n";
+    }
+    std::cout << "\n";
+
     GeodeticCoordinates moscow;
     moscow.latitude = 55*M_PI / 180.0;
     moscow.longitude = 37*M_PI / 180.0;
