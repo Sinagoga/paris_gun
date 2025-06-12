@@ -32,3 +32,29 @@
 *.exe
 *.out
 *.app
+
+# CMake files
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+*.cmake
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+
+# CMake dirs
+build/
+_build/
+out/
+bin/
+dist/
+*.build/
+x64/
+x86/
+
+# CMake build files
+Makefile
+*.ninja
+.ninja_deps
+.ninja_log
