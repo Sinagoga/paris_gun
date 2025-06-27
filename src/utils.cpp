@@ -1,5 +1,6 @@
 #include "coords.hpp"
 #include "utils.hpp"
+#include "adr.hpp"
 #include <cmath>
 #include <iostream>
 
@@ -51,5 +52,33 @@ namespace ballistics {
         double h = (1/cos(latitude)) * (u - (R_eq*R_eq)/sqrt(R_eq*R_eq + R_pol*R_pol*tan(latitude)*tan(latitude)));
 
         return h;
+    }
+
+    
+    double dmse(std::vector<double> M, std::vector<double> c_d_true, std::vector<double> c_d_pred) {
+        int n = std::size(c_d_true);
+        double sq_sum = 0;
+
+        for (int i = 0; i < n; i++) {
+            sq_sum += -2*(c_d_true[i]-c_d_pred[i])*(1/sqrt(M[i]*M[i]-1));
+        }
+
+        return sq_sum/n;
+    }
+
+    double get_a(std::vector<double> M, std::vector<double> C_d, double eta = 0.01, int iter = 1000) {
+        double a = 1;
+
+        for (int i = 0; i < iter; i++) {
+            std::vector<double> c_d_pred = {};
+            for (int j = 0; j < std::size(M); j++) {
+                double pred = c_d(M[i], a, 0.5);
+                c_d_pred.push_back(pred);
+            }
+            double dl = dmse(M, C_d, c_d_pred);
+            a = a - eta * dl;
+        }
+
+        return a;
     }
 }
