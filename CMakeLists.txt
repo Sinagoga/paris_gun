@@ -16,8 +16,22 @@ target_include_directories(ballistics_lib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+
+find_package(GSL REQUIRED)
+
 add_executable(ballistics_tests
     src/test.cpp
 )
 
+add_executable(paris_solver
+    src/paris_solver.cpp
+)
+
 target_link_libraries(ballistics_tests PRIVATE ballistics_lib)
+
+target_link_libraries(paris_solver
+    PRIVATE
+    ballistics_lib
+    GSL::gsl
+    GSL::gslcblas
+)
