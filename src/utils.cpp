@@ -6,6 +6,11 @@
 
 namespace ballistics {
 
+    double c_d(double M, double a, double b) {
+        if (M <= 1.1) M = 1.1;  // защита от √(M²−1)<0
+        return a / std::pow(M*M - 1.0, b);
+    }
+
     double g(CartesianCoordinates cart_coords, double t) {
         double u = sqrt(cart_coords.x*cart_coords.x + cart_coords.y*cart_coords.y);
         double z_a = cart_coords.z/R_eq;
@@ -66,7 +71,8 @@ namespace ballistics {
         return sq_sum/n;
     }
 
-    double get_a(std::vector<double> M, std::vector<double> C_d, double eta = 0.01, int iter = 1000) {
+    // double get_a(std::vector<double> M, std::vector<double> C_d, double eta = 0.01, int iter = 1000) {
+    double get_a(std::vector<double> M, std::vector<double> C_d, double eta, int iter) {
         double a = 1;
 
         for (int i = 0; i < iter; i++) {
@@ -80,5 +86,13 @@ namespace ballistics {
         }
 
         return a;
+    }
+    
+    static const double a_drag = 0.295;
+    static const double b_drag = 0.5;
+
+    double drag_coefficient(double M) {
+    if (M <= 1.1) M = 1.1;
+    return a_drag / std::pow(M*M - 1.0, b_drag);
     }
 }

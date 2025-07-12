@@ -27,7 +27,7 @@ class ISA {
                 : /* h ≤ 20 000 */   T_trop;
     };
 
-    static constexpr double get_pressure(double h) {
+    static double get_pressure(double h) {
         const double p0     = 101325.0;    // Pa at sea level
         const double T0     = 288.15;      // K at sea level
         const double L      = 0.0065;      // K/m lapse rate
@@ -50,7 +50,7 @@ class ISA {
         }
     };
 
-    static constexpr double get_density(double h) {
+    static double get_density(double h) {
         constexpr double R_air = 287.0528; // J/(kg·K) specific gas constant for the air
 
         return ISA::get_pressure(h) / (R_air * ISA::get_temperature(h));
